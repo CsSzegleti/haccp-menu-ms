@@ -1,0 +1,1 @@
+curl -v -X GET http://devtenant1:8081/api/haccp/menu/category --header "Authorization: Bearer "$access_token

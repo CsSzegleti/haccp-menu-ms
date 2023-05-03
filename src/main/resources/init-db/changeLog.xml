@@ -1,0 +1,190 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet author="CsSzegleti" id="createInitialTables">
+        <createTable tableName="allergen">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_ALLERGEN"/>
+            </column>
+            <column name="long_name" type="varchar(255)"/>
+            <column name="short_name" type="varchar(3)"/>
+            <column name="create" type="timestamp"/>
+            <column name="lastmodify" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="allergen" indexName="allergen-id">
+            <column name="id"/>
+        </createIndex>
+        <createTable tableName="category">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CATEGORY"/>
+            </column>
+            <column name="menu_card_pos" type="int"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="create" type="timestamp"/>
+            <column name="lastmodify" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="category" indexName="category-id">
+            <column name="id"/>
+        </createIndex>
+        <createTable tableName="storing_condition">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_STORING_CONDITION"/>
+            </column>
+            <column name="temperature" type="float"/>
+            <column name="humidity" type="float"/>
+            <column name="max_storing_hours" type="int"/>
+        </createTable>
+        <createIndex tableName="storing_condition" indexName="condition-id">
+            <column name="id"/>
+        </createIndex>
+        <createTable tableName="menu_item">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_MENU_ITEM"/>
+            </column>
+            <column name="description" type="varchar(1000)"/>
+            <column name="is_preparable" type="boolean"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="price" type="float"/>
+            <column name="currency" type="varchar(255)"/>
+            <column name="category_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="FK_CATEGORY" references="category(id)"/>
+            </column>
+            <column name="storing_condition_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="FK_STORING_CONDITION" references="storing_condition(id)"/>
+            </column>
+            <column name="create" type="timestamp"/>
+            <column name="lastmodify" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="menu_item" indexName="menuitem-id">
+            <column name="id"/>
+        </createIndex>
+        <createIndex tableName="menu_item" unique="false" indexName="item_category-id">
+            <column name="category_id"/>
+        </createIndex>
+        <createTable tableName="menu_item_allergen">
+            <column name="menu_item_id" type="bigint">
+                <constraints foreignKeyName="FK_ALLERGEN_MENU_ITEM" nullable="false" references="menu_item(id)"/>
+            </column>
+            <column name="allergens_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="FK_ALLERGENS" references="allergen(id)"/>
+            </column>
+        </createTable>
+        <createIndex tableName="menu_item_allergen" unique="false" indexName="ALL_MENUITEM-id">
+            <column name="menu_item_id"/>
+        </createIndex>
+        <createIndex tableName="menu_item_allergen" unique="false" indexName="ALL_allergens-id">
+            <column name="allergens_id"/>
+        </createIndex>
+        <createTable tableName="menu_item_img_urls">
+            <column name="menu_item_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="FK_IMG_URL_MENU_ITEM" references="menu_item(id)"/>
+            </column>
+            <column name="img_url" type="varchar(1000)"/>
+            <column name="create" type="timestamp"/>
+            <column name="lastmodify" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="menu_item_img_urls" unique="false" indexName="IMG_menu_item-id">
+            <column name="menu_item_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="CsSzegleti" id="hibernate_sequences">
+        <createSequence sequenceName="hibernate_sequence" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="CsSzegleti" id="createTablesForDevtenant1">
+        <sql>
+            CREATE SCHEMA IF NOT EXISTS devtenant1;
+        </sql>
+        <createTable tableName="allergen" schemaName="devtenant1">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_ALLERGEN"/>
+            </column>
+            <column name="long_name" type="varchar(255)"/>
+            <column name="short_name" type="varchar(3)"/>
+            <column name="create" type="timestamp"/>
+            <column name="lastmodify" type="timestamp"/>
+        </createTable>
+        <createIndex schemaName="devtenant1" tableName="allergen" indexName="allergen-id">
+            <column name="id"/>
+        </createIndex>
+        <createTable tableName="category" schemaName="devtenant1">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_CATEGORY"/>
+            </column>
+            <column name="menu_card_pos" type="int"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="create" type="timestamp"/>
+            <column name="lastmodify" type="timestamp"/>
+        </createTable>
+        <createIndex schemaName="devtenant1" tableName="category" indexName="category-id">
+            <column name="id"/>
+        </createIndex>
+        <createTable tableName="storing_condition" schemaName="devtenant1">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_STORING_CONDITION"/>
+            </column>
+            <column name="temperature" type="float"/>
+            <column name="humidity" type="float"/>
+            <column name="max_storing_hours" type="int"/>
+        </createTable>
+        <createIndex schemaName="devtenant1" tableName="storing_condition" indexName="condition-id">
+            <column name="id"/>
+        </createIndex>
+        <createTable tableName="menu_item" schemaName="devtenant1">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_MENU_ITEM"/>
+            </column>
+            <column name="description" type="varchar(1000)"/>
+            <column name="is_preparable" type="boolean"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="price" type="float"/>
+            <column name="currency" type="varchar(255)"/>
+            <column name="category_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="FK_CATEGORY" references="devtenant1.category(id)"/>
+            </column>
+            <column name="storing_condition_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="FK_STORING_CONDITION" references="devtenant1.storing_condition(id)"/>
+            </column>
+            <column name="create" type="timestamp"/>
+            <column name="lastmodify" type="timestamp"/>
+        </createTable>
+        <createIndex schemaName="devtenant1" tableName="menu_item" indexName="menuitem-id">
+            <column name="id"/>
+        </createIndex>
+        <createIndex schemaName="devtenant1" tableName="menu_item" unique="false" indexName="item_category-id">
+            <column name="category_id"/>
+        </createIndex>
+        <createTable tableName="menu_item_allergen" schemaName="devtenant1">
+            <column name="menu_item_id" type="bigint">
+                <constraints foreignKeyName="FK_ALLERGEN_MENU_ITEM" nullable="false" references="devtenant1.menu_item(id)"/>
+            </column>
+            <column name="allergens_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="FK_ALLERGENS" references="devtenant1.allergen(id)"/>
+            </column>
+        </createTable>
+        <createIndex schemaName="devtenant1" tableName="menu_item_allergen" unique="false" indexName="ALL_MENUITEM-id">
+            <column name="menu_item_id"/>
+        </createIndex>
+        <createIndex schemaName="devtenant1" tableName="menu_item_allergen" unique="false" indexName="ALL_allergens-id">
+            <column name="allergens_id"/>
+        </createIndex>
+        <createTable tableName="menu_item_img_urls" schemaName="devtenant1">
+            <column name="menu_item_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="FK_IMG_URL_MENU_ITEM" references="devtenant1.menu_item(id)"/>
+            </column>
+            <column name="img_url" type="varchar(1000)"/>
+            <column name="create" type="timestamp"/>
+            <column name="lastmodify" type="timestamp"/>
+        </createTable>
+        <createIndex schemaName="devtenant1" tableName="menu_item_img_urls" unique="false" indexName="IMG_menu_item-id">
+            <column name="menu_item_id"/>
+        </createIndex>
+        <createSequence schemaName="devtenant1" sequenceName="hibernate_sequence" startValue="1"/>
+    </changeSet>
+</databaseChangeLog>

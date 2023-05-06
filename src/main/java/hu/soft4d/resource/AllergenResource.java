@@ -1,11 +1,8 @@
 package hu.soft4d.resource;
 
 import hu.soft4d.model.Allergen;
-import hu.soft4d.model.StoringCondition;
-import hu.soft4d.resource.utils.Roles;
-import io.quarkus.security.Authenticated;
-import io.quarkus.security.User;
 import org.apache.commons.beanutils.BeanUtils;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -29,7 +26,7 @@ public class AllergenResource {
     @APIResponses(value = {
         @APIResponse(responseCode = "200", description = "Successful query",
             content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = StoringCondition.class))}
+            schema = @Schema(type = SchemaType.ARRAY, implementation = Allergen.class))}
         ),
     })
     @RolesAllowed(Roles.USER_ROLE)
@@ -43,7 +40,7 @@ public class AllergenResource {
     @APIResponses(value = {
         @APIResponse(responseCode = "200", description = "Successful query",
             content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = StoringCondition.class))}
+            schema = @Schema(implementation = Allergen.class))}
         ),
         @APIResponse(responseCode = "404", description = "Entity not found",
             content = {@Content(mediaType = "application/json")}

@@ -16,7 +16,7 @@ import javax.ws.rs.core.Application;
     type = SecuritySchemeType.OPENIDCONNECT,
     securitySchemeName = "openIdConnect",
     description = "Keycloak HACCP",
-    openIdConnectUrl = "https//haccp:8543/realms/base/.well-known/openid-configuration"
+    openIdConnectUrl = "http//localhost:6080/auth/realms/base/.well-known/openid-configuration"
 )
 @OpenAPIDefinition(
     tags = {

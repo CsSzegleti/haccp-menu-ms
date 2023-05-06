@@ -5,6 +5,7 @@ import hu.soft4d.model.MenuItem;
 import hu.soft4d.resource.utils.Roles;
 import io.quarkus.security.Authenticated;
 import org.apache.commons.beanutils.BeanUtils;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
@@ -28,10 +29,10 @@ import java.util.Optional;
 public class CategoryResource {
     @GET
     @APIResponses(value = {
-        @APIResponse(responseCode = "200", description = "Successful query",
-            content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = Category.class))}
-        ),
+            @APIResponse(responseCode = "200", description = "Successful query",
+                content = {@Content(mediaType = "application/json",
+                schema = @Schema(type = SchemaType.ARRAY, implementation = Category.class))}
+            ),
     })
     @RolesAllowed(Roles.USER_ROLE)
     public List<Category> findAll() {
@@ -42,13 +43,13 @@ public class CategoryResource {
     @GET
     @Path("{id}")
     @APIResponses(value = {
-        @APIResponse(responseCode = "200", description = "Successful query",
-            content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = Category.class))}
-        ),
-        @APIResponse(responseCode = "404", description = "Entity not found",
-            content = {@Content(mediaType = "application/json")}
-        )
+            @APIResponse(responseCode = "200", description = "Successful query",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Category.class))}
+            ),
+            @APIResponse(responseCode = "404", description = "Entity not found",
+                    content = {@Content(mediaType = "application/json")}
+            )
     })
     @RolesAllowed(Roles.USER_ROLE)
     public Category findById(@PathParam("id") Long id) {
@@ -56,13 +57,13 @@ public class CategoryResource {
     }
 
     @APIResponses(value = {
-        @APIResponse(responseCode = "201", description = "Adding successful",
-            content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = Response.class))}
-        ),
-        @APIResponse(responseCode = "500", description = "Item already exists",
-            content = {@Content(mediaType = "application/json")}
-        )
+            @APIResponse(responseCode = "201", description = "Adding successful",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Response.class))}
+            ),
+            @APIResponse(responseCode = "500", description = "Item already exists",
+                    content = {@Content(mediaType = "application/json")}
+            )
     })
     @POST
     @Transactional(Transactional.TxType.REQUIRED)
@@ -75,13 +76,13 @@ public class CategoryResource {
     }
 
     @APIResponses(value = {
-        @APIResponse(responseCode = "200", description = "Modification successful",
-            content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = Response.class))}
-        ),
-        @APIResponse(responseCode = "500", description = "No such item",
-            content = {@Content(mediaType = "application/json")}
-        )
+            @APIResponse(responseCode = "200", description = "Modification successful",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Response.class))}
+            ),
+            @APIResponse(responseCode = "500", description = "No such item",
+                    content = {@Content(mediaType = "application/json")}
+            )
     })
     @PUT
     @Transactional
@@ -101,9 +102,9 @@ public class CategoryResource {
 
     @NoCache
     @APIResponses(value = {
-        @APIResponse(responseCode = "204", description = "Delete successful",
-            content = {@Content(mediaType = "application/json")}
-        )
+            @APIResponse(responseCode = "204", description = "Delete successful",
+                    content = {@Content(mediaType = "application/json")}
+            )
     })
     @DELETE
     @Transactional

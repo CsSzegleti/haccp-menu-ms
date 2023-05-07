@@ -88,7 +88,7 @@ public class CategoryResource {
     @Path("{id}")
     @Transactional
     @NoCache
-    @RolesAllowed(Roles.ADMIN_ROLE)
+//    @RolesAllowed(Roles.ADMIN_ROLE)
     public Response updateCategory(@RequestBody Category category, @PathParam("id") Long id, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
         if(!id.equals(category.id)) {
             throw new BadRequestException();

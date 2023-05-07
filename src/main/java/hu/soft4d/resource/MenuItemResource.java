@@ -86,7 +86,7 @@ public class MenuItemResource {
     @Path("{id}")
     @Transactional
     @NoCache
-    @RolesAllowed(Roles.ADMIN_ROLE)
+//    @RolesAllowed(Roles.ADMIN_ROLE)
     public Response updateMenuItem(MenuItem menuItem, @PathParam("id") Long id, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
         if(!id.equals(menuItem.id)) {
             throw new BadRequestException();

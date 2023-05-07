@@ -84,7 +84,7 @@ public class AllergenResource {
     @Transactional
     @Path("{id}")
     @NoCache
-    @RolesAllowed(Roles.ADMIN_ROLE)
+//    @RolesAllowed(Roles.ADMIN_ROLE)
     public Response update(Allergen allergen, @PathParam("id") Long id, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
         if(!id.equals(allergen.id)) {
             throw new BadRequestException();

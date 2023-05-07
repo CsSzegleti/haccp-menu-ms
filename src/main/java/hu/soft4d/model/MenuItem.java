@@ -1,6 +1,7 @@
 package hu.soft4d.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -38,5 +39,6 @@ public class MenuItem extends PanacheEntity {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "storing_condition_id", referencedColumnName = "id")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     public StoringCondition storingCondition;
 }

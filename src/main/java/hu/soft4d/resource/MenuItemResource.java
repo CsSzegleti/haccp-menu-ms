@@ -4,6 +4,7 @@ import hu.soft4d.model.MenuItem;
 import hu.soft4d.resource.utils.Roles;
 import io.quarkus.security.Authenticated;
 import org.apache.commons.beanutils.BeanUtils;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -32,6 +33,9 @@ public class MenuItemResource {
             schema = @Schema(type = SchemaType.ARRAY, implementation = MenuItem.class))}
         ),
     })
+    @Operation(
+            operationId = "ListMenuItems"
+    )
     //@RolesAllowed(Roles.USER_ROLE)
     public List<MenuItem> findAll() {
         return MenuItem.listAll();
@@ -40,6 +44,9 @@ public class MenuItemResource {
     @NoCache
     @GET
     @Path("{id}")
+    @Operation(
+            operationId = "GetMenuItemById"
+    )
     @APIResponses(value = {
         @APIResponse(responseCode = "200", description = "Successful query",
             content = {@Content(mediaType = "application/json",
@@ -63,6 +70,9 @@ public class MenuItemResource {
             content = {@Content(mediaType = "application/json")}
         )
     })
+    @Operation(
+            operationId = "AddMenuItem"
+    )
     @POST
     @Transactional(Transactional.TxType.REQUIRED)
     @NoCache
@@ -82,6 +92,9 @@ public class MenuItemResource {
             content = {@Content(mediaType = "application/json")}
         )
     })
+    @Operation(
+            operationId = "UpdateMenuItem"
+    )
     @PUT
     @Path("{id}")
     @Transactional
@@ -109,6 +122,9 @@ public class MenuItemResource {
             content = {@Content(mediaType = "application/json")}
         )
     })
+    @Operation(
+            operationId = "DeleteMenuItemById"
+    )
     @DELETE
     @Transactional
     @Path("{id}")

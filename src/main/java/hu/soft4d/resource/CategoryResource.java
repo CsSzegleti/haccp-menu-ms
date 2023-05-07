@@ -5,6 +5,7 @@ import hu.soft4d.model.MenuItem;
 import hu.soft4d.resource.utils.Roles;
 import io.quarkus.security.Authenticated;
 import org.apache.commons.beanutils.BeanUtils;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -34,6 +35,9 @@ public class CategoryResource {
                 schema = @Schema(type = SchemaType.ARRAY, implementation = Category.class))}
             ),
     })
+    @Operation(
+            operationId = "ListCategories"
+    )
     //@RolesAllowed(Roles.USER_ROLE)
     public List<Category> findAll() {
         return Category.listAll();
@@ -51,6 +55,9 @@ public class CategoryResource {
                     content = {@Content(mediaType = "application/json")}
             )
     })
+    @Operation(
+            operationId = "GetCategoryById"
+    )
     //@RolesAllowed(Roles.USER_ROLE)
     public Category findById(@PathParam("id") Long id) {
         return (Category) Category.findByIdOptional(id).orElseThrow(NotFoundException::new);
@@ -65,6 +72,9 @@ public class CategoryResource {
                     content = {@Content(mediaType = "application/json")}
             )
     })
+    @Operation(
+            operationId = "AddCategory"
+    )
     @POST
     @Transactional(Transactional.TxType.REQUIRED)
     @NoCache
@@ -84,6 +94,9 @@ public class CategoryResource {
                     content = {@Content(mediaType = "application/json")}
             )
     })
+    @Operation(
+            operationId = "ModifyCategory"
+    )
     @PUT
     @Path("{id}")
     @Transactional
@@ -111,6 +124,9 @@ public class CategoryResource {
                     content = {@Content(mediaType = "application/json")}
             )
     })
+    @Operation(
+            operationId = "DeleteCategoryById"
+    )
     @DELETE
     @Transactional
     @Path("{id}")

@@ -3,6 +3,7 @@ package hu.soft4d.resource;
 import hu.soft4d.model.Allergen;
 import hu.soft4d.resource.utils.Roles;
 import org.apache.commons.beanutils.BeanUtils;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -30,6 +31,9 @@ public class AllergenResource {
             schema = @Schema(type = SchemaType.ARRAY, implementation = Allergen.class))}
         ),
     })
+    @Operation(
+            operationId = "ListAllergens"
+    )
     //@RolesAllowed(Roles.USER_ROLE)
     public List<Allergen> findAll() {
         return Allergen.listAll();
@@ -47,6 +51,9 @@ public class AllergenResource {
             content = {@Content(mediaType = "application/json")}
         )
     })
+    @Operation(
+            operationId = "GetAllergenById"
+    )
     //@RolesAllowed(Roles.USER_ROLE)
     public Allergen findById(@PathParam("id") Long id) {
         return (Allergen) Allergen.findByIdOptional(id).orElseThrow(NotFoundException::new);
@@ -61,6 +68,9 @@ public class AllergenResource {
             content = {@Content(mediaType = "application/json")}
         )
     })
+    @Operation(
+            operationId = "AddAllergen"
+    )
     @POST
     @Transactional(Transactional.TxType.REQUIRED)
     @NoCache
@@ -80,6 +90,9 @@ public class AllergenResource {
             content = {@Content(mediaType = "application/json")}
         )
     })
+    @Operation(
+            operationId = "ModifyAllergen"
+    )
     @PUT
     @Transactional
     @Path("{id}")
@@ -107,6 +120,9 @@ public class AllergenResource {
             content = {@Content(mediaType = "application/json")}
         )
     })
+    @Operation(
+            operationId = "DeleteAllergenById"
+    )
     @DELETE
     @Transactional
     @Path("{id}")

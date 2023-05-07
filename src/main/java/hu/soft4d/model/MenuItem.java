@@ -19,7 +19,6 @@ public class MenuItem extends PanacheEntity {
     public double price;
 
     @ManyToOne
-    @Schema(required = true)
     public Category category;
 
     @Schema(required = true)

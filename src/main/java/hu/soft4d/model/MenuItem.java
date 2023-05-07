@@ -1,6 +1,7 @@
 package hu.soft4d.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -11,15 +12,20 @@ import java.util.List;
 public class MenuItem extends PanacheEntity {
 
     @Column(length = 100)
+    @Schema(required = true)
     public String name;
 
+    @Schema(required = true)
     public double price;
 
     @ManyToOne
+    @Schema(required = true)
     public Category category;
 
+    @Schema(required = true)
     public String currency;
 
+    @Schema(required = true)
     public String description;
 
     @ElementCollection(targetClass = String.class)
@@ -40,5 +46,6 @@ public class MenuItem extends PanacheEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "storing_condition_id", referencedColumnName = "id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Schema(required = true)
     public StoringCondition storingCondition;
 }

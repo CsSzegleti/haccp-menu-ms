@@ -2,6 +2,7 @@ package hu.soft4d.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import java.util.List;
 @Entity
 public class Category extends PanacheEntity {
 
+    @Schema(required = true)
     public String name;
 
     @OneToMany(mappedBy = "category")
@@ -21,6 +23,7 @@ public class Category extends PanacheEntity {
     public List<MenuItem> items = new ArrayList<>();
 
     @Column(name = "menu_card_pos")
+    @Schema(required = true)
     public int menuCardPos;
 
 

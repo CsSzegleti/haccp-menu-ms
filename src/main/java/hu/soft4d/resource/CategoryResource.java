@@ -25,7 +25,7 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/menu/category")
-@Authenticated
+//@Authenticated
 public class CategoryResource {
     @GET
     @APIResponses(value = {
@@ -34,7 +34,7 @@ public class CategoryResource {
                 schema = @Schema(type = SchemaType.ARRAY, implementation = Category.class))}
             ),
     })
-    @RolesAllowed(Roles.USER_ROLE)
+    //@RolesAllowed(Roles.USER_ROLE)
     public List<Category> findAll() {
         return Category.listAll();
     }
@@ -51,7 +51,7 @@ public class CategoryResource {
                     content = {@Content(mediaType = "application/json")}
             )
     })
-    @RolesAllowed(Roles.USER_ROLE)
+    //@RolesAllowed(Roles.USER_ROLE)
     public Category findById(@PathParam("id") Long id) {
         return (Category) Category.findByIdOptional(id).orElseThrow(NotFoundException::new);
     }
@@ -68,7 +68,7 @@ public class CategoryResource {
     @POST
     @Transactional(Transactional.TxType.REQUIRED)
     @NoCache
-    @RolesAllowed(Roles.ADMIN_ROLE)
+    //@RolesAllowed(Roles.ADMIN_ROLE)
     public Response saveCategory(Category category, @Context UriInfo uriInfo) {
         MenuItem.persist(category);
         UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(category.id.toString());
@@ -85,10 +85,15 @@ public class CategoryResource {
             )
     })
     @PUT
+    @Path("{id}")
     @Transactional
     @NoCache
     @RolesAllowed(Roles.ADMIN_ROLE)
-    public Response updateCategory(@RequestBody Category category, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
+    public Response updateCategory(@RequestBody Category category, @PathParam("id") Long id, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
+        if(!id.equals(category.id)) {
+            throw new BadRequestException();
+        }
+
         Optional<Category> entity = Category.findByIdOptional(category.id);
         if (entity.isEmpty()) {
             throw new NotFoundException();
@@ -109,7 +114,7 @@ public class CategoryResource {
     @DELETE
     @Transactional
     @Path("{id}")
-    @RolesAllowed(Roles.ADMIN_ROLE)
+    //@RolesAllowed(Roles.ADMIN_ROLE)
     public void deleteCategory(@PathParam("id") Long id) {
         Category.deleteById(id);
     }
@@ -117,8 +122,8 @@ public class CategoryResource {
 
     @GET
     @Path("{id}/items")
-    @RolesAllowed(Roles.USER_ROLE)
-    public List<MenuItem> getItems(@PathParam("id") Long id){
+    //@RolesAllowed(Roles.USER_ROLE)
+    public List<MenuItem> getItems(@PathParam("id") Long id) {
         var category = (Category) Category.findByIdOptional(id).orElseThrow(NotFoundException::new);
 
         return category.items;

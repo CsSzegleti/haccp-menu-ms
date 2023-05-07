@@ -1,11 +1,8 @@
 package hu.soft4d.resource;
 
 import hu.soft4d.model.MenuItem;
-import hu.soft4d.resource.converter.MenuItemConverter;
-import hu.soft4d.resource.dto.MenuItemDto;
 import hu.soft4d.resource.utils.Roles;
 import io.quarkus.security.Authenticated;
-import liquibase.pro.packaged.R;
 import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -15,34 +12,29 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.annotations.cache.NoCache;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Path("/menu/item")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Authenticated
+//@Authenticated
 public class MenuItemResource {
-
-    @Inject
-    MenuItemConverter menuItemConverter;
 
     @GET
     @APIResponses(value = {
         @APIResponse(responseCode = "200", description = "Successful query",
             content = {@Content(mediaType = "application/json",
-            schema = @Schema(type = SchemaType.ARRAY, implementation = MenuItemDto.class))}
+            schema = @Schema(type = SchemaType.ARRAY, implementation = MenuItem.class))}
         ),
     })
-    @RolesAllowed(Roles.USER_ROLE)
-    public List<MenuItemDto> findAll() {
-        return MenuItem.listAll().stream().map(item -> menuItemConverter.toExternal((MenuItem) item)).collect(Collectors.toList());
+    //@RolesAllowed(Roles.USER_ROLE)
+    public List<MenuItem> findAll() {
+        return MenuItem.listAll();
     }
 
     @NoCache
@@ -51,15 +43,15 @@ public class MenuItemResource {
     @APIResponses(value = {
         @APIResponse(responseCode = "200", description = "Successful query",
             content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = MenuItemDto.class))}
+            schema = @Schema(implementation = MenuItem.class))}
         ),
         @APIResponse(responseCode = "404", description = "Entity not found",
             content = {@Content(mediaType = "application/json")}
         )
     })
-    @RolesAllowed(Roles.USER_ROLE)
-    public MenuItemDto findById(@PathParam("id") Long id) {
-        return menuItemConverter.toExternal ((MenuItem) MenuItem.findByIdOptional(id).orElseThrow(NotFoundException::new));
+    //@RolesAllowed(Roles.USER_ROLE)
+    public MenuItem findById(@PathParam("id") Long id) {
+        return (MenuItem) MenuItem.findByIdOptional(id).orElseThrow(NotFoundException::new);
     }
 
     @APIResponses(value = {
@@ -74,11 +66,10 @@ public class MenuItemResource {
     @POST
     @Transactional(Transactional.TxType.REQUIRED)
     @NoCache
-    @RolesAllowed(Roles.ADMIN_ROLE)
-    public Response save(MenuItemDto menuItem, @Context UriInfo uriInfo) {
-        MenuItem entity = menuItemConverter.toBusiness(menuItem);
-        MenuItem.persist(entity);
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(entity.id.toString());
+    //@RolesAllowed(Roles.ADMIN_ROLE)
+    public Response save(MenuItem menuItem, @Context UriInfo uriInfo) {
+        MenuItem.persist(menuItem);
+        UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(menuItem.id.toString());
         return Response.created(builder.build()).build();
     }
 
@@ -92,16 +83,21 @@ public class MenuItemResource {
         )
     })
     @PUT
+    @Path("{id}")
     @Transactional
     @NoCache
     @RolesAllowed(Roles.ADMIN_ROLE)
-    public Response updateMenuItem(MenuItemDto menuItem, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
+    public Response updateMenuItem(MenuItem menuItem, @PathParam("id") Long id, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
+        if(!id.equals(menuItem.id)) {
+            throw new BadRequestException();
+        }
+
         Optional<MenuItem> entity = MenuItem.findByIdOptional(menuItem.id);
         if (entity.isEmpty()) {
             throw new NotFoundException();
         }
 
-        BeanUtils.copyProperties(entity.get(), menuItemConverter.toBusiness(menuItem));
+        BeanUtils.copyProperties(entity.get(), menuItem);
 
         UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(menuItem.id.toString());
         return Response.ok(builder.build()).build();
@@ -117,7 +113,7 @@ public class MenuItemResource {
     @Transactional
     @Path("{id}")
     @Consumes(MediaType.TEXT_PLAIN)
-    @RolesAllowed(Roles.ADMIN_ROLE)
+    //@RolesAllowed(Roles.ADMIN_ROLE)
     public void deleteMenuItem(@PathParam("id") Long id) {
         MenuItem.deleteById(id);
     }

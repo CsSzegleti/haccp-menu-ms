@@ -1,6 +1,7 @@
 package hu.soft4d.resource;
 
 import hu.soft4d.model.Allergen;
+import hu.soft4d.resource.utils.Roles;
 import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/menu/allergen")
-@Authenticated
+//@Authenticated
 public class AllergenResource {
     @GET
     @APIResponses(value = {
@@ -29,7 +30,7 @@ public class AllergenResource {
             schema = @Schema(type = SchemaType.ARRAY, implementation = Allergen.class))}
         ),
     })
-    @RolesAllowed(Roles.USER_ROLE)
+    //@RolesAllowed(Roles.USER_ROLE)
     public List<Allergen> findAll() {
         return Allergen.listAll();
     }
@@ -46,7 +47,7 @@ public class AllergenResource {
             content = {@Content(mediaType = "application/json")}
         )
     })
-    @RolesAllowed(Roles.USER_ROLE)
+    //@RolesAllowed(Roles.USER_ROLE)
     public Allergen findById(@PathParam("id") Long id) {
         return (Allergen) Allergen.findByIdOptional(id).orElseThrow(NotFoundException::new);
     }
@@ -63,7 +64,7 @@ public class AllergenResource {
     @POST
     @Transactional(Transactional.TxType.REQUIRED)
     @NoCache
-    @RolesAllowed(Roles.ADMIN_ROLE)
+    //@RolesAllowed(Roles.ADMIN_ROLE)
     public Response save(Allergen allergen, @Context UriInfo uriInfo) {
         Allergen.persist(allergen);
         UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(allergen.id.toString());
@@ -81,9 +82,14 @@ public class AllergenResource {
     })
     @PUT
     @Transactional
+    @Path("{id}")
     @NoCache
     @RolesAllowed(Roles.ADMIN_ROLE)
-    public Response update(Allergen allergen, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
+    public Response update(Allergen allergen, @PathParam("id") Long id, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
+        if(!id.equals(allergen.id)) {
+            throw new BadRequestException();
+        }
+
         Optional<Allergen> entity = Allergen.findByIdOptional(allergen.id);
         if (entity.isEmpty()) {
             throw new NotFoundException();
@@ -104,7 +110,7 @@ public class AllergenResource {
     @DELETE
     @Transactional
     @Path("{id}")
-    @RolesAllowed(Roles.ADMIN_ROLE)
+    //@RolesAllowed(Roles.ADMIN_ROLE)
     public void delete(@PathParam("id") Long id) {
         Allergen.deleteById(id);
     }

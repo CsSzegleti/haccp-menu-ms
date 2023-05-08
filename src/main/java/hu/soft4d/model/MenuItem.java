@@ -1,5 +1,6 @@
 package hu.soft4d.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.annotations.Cascade;
@@ -19,6 +20,7 @@ public class MenuItem extends PanacheEntity {
     public double price;
 
     @ManyToOne
+    @JsonBackReference
     public Category category;
 
     @Schema(required = true)

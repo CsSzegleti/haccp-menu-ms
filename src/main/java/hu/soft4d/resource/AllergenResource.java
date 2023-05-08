@@ -110,7 +110,7 @@ public class AllergenResource {
 
         BeanUtils.copyProperties(entity.get(), allergen);
 
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(allergen.id.toString());
+        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         return Response.ok(builder.build()).build();
     }
 

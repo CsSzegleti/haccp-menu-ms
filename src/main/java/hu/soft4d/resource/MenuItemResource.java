@@ -112,7 +112,7 @@ public class MenuItemResource {
 
         BeanUtils.copyProperties(entity.get(), menuItem);
 
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(menuItem.id.toString());
+        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         return Response.ok(builder.build()).build();
     }
 

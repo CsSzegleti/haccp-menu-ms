@@ -114,7 +114,7 @@ public class CategoryResource {
 
         BeanUtils.copyProperties(entity.get(), category);
 
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(category.id.toString());
+        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         return Response.ok(builder.build()).build();
     }
 

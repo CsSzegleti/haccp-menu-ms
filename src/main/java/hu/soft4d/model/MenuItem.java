@@ -1,6 +1,7 @@
 package hu.soft4d.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.annotations.Cascade;
@@ -44,7 +45,7 @@ public class MenuItem extends PanacheEntity {
     @Column(name = "is_preparable")
     public boolean isPreparable;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "storing_condition_id", referencedColumnName = "id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @Schema(required = true)

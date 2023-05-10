@@ -23,7 +23,7 @@ import java.util.Optional;
 @Path("/menu/item")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-//@Authenticated
+@Authenticated
 public class MenuItemResource {
 
     @GET
@@ -36,7 +36,7 @@ public class MenuItemResource {
     @Operation(
             operationId = "ListMenuItems"
     )
-    //@RolesAllowed(Roles.USER_ROLE)
+    @RolesAllowed(Roles.USER_ROLE)
     public List<MenuItem> findAll() {
         return MenuItem.listAll();
     }
@@ -56,7 +56,7 @@ public class MenuItemResource {
             content = {@Content(mediaType = "application/json")}
         )
     })
-    //@RolesAllowed(Roles.USER_ROLE)
+    @RolesAllowed(Roles.USER_ROLE)
     public MenuItem findById(@PathParam("id") Long id) {
         return (MenuItem) MenuItem.findByIdOptional(id).orElseThrow(NotFoundException::new);
     }
@@ -76,7 +76,7 @@ public class MenuItemResource {
     @POST
     @Transactional(Transactional.TxType.REQUIRED)
     @NoCache
-    //@RolesAllowed(Roles.ADMIN_ROLE)
+    @RolesAllowed(Roles.ADMIN_ROLE)
     public Response save(MenuItem menuItem, @Context UriInfo uriInfo) {
         MenuItem.persist(menuItem);
         UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(menuItem.id.toString());
@@ -99,7 +99,7 @@ public class MenuItemResource {
     @Path("{id}")
     @Transactional
     @NoCache
-//    @RolesAllowed(Roles.ADMIN_ROLE)
+    @RolesAllowed(Roles.ADMIN_ROLE)
     public Response updateMenuItem(MenuItem menuItem, @PathParam("id") Long id, @Context UriInfo uriInfo) throws InvocationTargetException, IllegalAccessException {
         if(!id.equals(menuItem.id)) {
             throw new BadRequestException();
@@ -129,7 +129,7 @@ public class MenuItemResource {
     @Transactional
     @Path("{id}")
     @Consumes(MediaType.TEXT_PLAIN)
-    //@RolesAllowed(Roles.ADMIN_ROLE)
+    @RolesAllowed(Roles.ADMIN_ROLE)
     public void deleteMenuItem(@PathParam("id") Long id) {
         MenuItem.deleteById(id);
     }

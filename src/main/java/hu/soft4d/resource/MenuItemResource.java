@@ -2,6 +2,7 @@ package hu.soft4d.resource;
 
 import hu.soft4d.model.MenuItem;
 import hu.soft4d.resource.utils.Roles;
+import hu.soft4d.resource.utils.Utils;
 import io.quarkus.security.Authenticated;
 import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -86,7 +87,7 @@ public class MenuItemResource {
     @APIResponses(value = {
         @APIResponse(responseCode = "200", description = "Modification successful",
             content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = Response.class))}
+            schema = @Schema(implementation = MenuItem.class))}
         ),
         @APIResponse(responseCode = "500", description = "No such item",
             content = {@Content(mediaType = "application/json")}
@@ -110,10 +111,8 @@ public class MenuItemResource {
             throw new NotFoundException();
         }
 
-        BeanUtils.copyProperties(entity.get(), menuItem);
-
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-        return Response.ok(builder.build()).build();
+        Utils.copyMenuItemProperties(entity.get(), menuItem);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @NoCache
